@@ -1,113 +1,361 @@
+"use client";
+import { ModeToggle } from "@/components/ModeToggle";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+} from "@/components/ui/carousel";
+import { Input } from "@/components/ui/input";
+
+import { Clock, House, Mail, Menu, Users } from "lucide-react";
 import Image from "next/image";
+import IMG from "@/public/images/image.jpg";
+import Link from "next/link";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+import React, { useState } from "react";
+import {
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+} from "@/components/ui/navigation-menu";
+import { navigationMenuTriggerStyle } from "@/components/ui/navigation-menu";
+import { ListItem } from "@/components/ui/list-item";
+
+const components: { title: string; href: string; description: string }[] = [
+  {
+    title: "Animals",
+    href: "/posts/animals",
+    description: "All you can read about animals",
+  },
+  {
+    title: "Countries",
+    href: "/posts/countries",
+    description: "Every country is a mischief.",
+  },
+  {
+    title: "Arts",
+    href: "/posts/arts",
+    description: "Art from all around the world.",
+  },
+  {
+    title: "Cultures",
+    href: "/posts/cultures",
+    description: "Get to know new culture every day.",
+  },
+];
 
 export default function Home() {
+  const [activeMenu, setActiveMenu] = useState(0);
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          Get started by editing&nbsp;
-          <code className="font-mono font-bold">app/page.tsx</code>
-        </p>
-        <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:size-auto lg:bg-none">
-          <a
-            className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{" "}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className="dark:invert"
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
+    <>
+      <header className="mx-3 mt-4">
+        <div className="flex w-full flex-row items-center justify-between gap-x-2">
+          <Sheet>
+            <SheetTrigger asChild className="md:hidden">
+              <Button variant="ghost" size="icon">
+                <Menu className="h-7 w-7" />
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="left">
+              <SheetHeader>
+                <SheetTitle className="text-xl">Menu</SheetTitle>
+              </SheetHeader>
+              <div className="mt-5 flex flex-col items-start gap-y-2">
+                <Button className="gap-x-1 text-lg" size="lg" variant="link">
+                  <House />
+                  Home
+                </Button>
+                <Button className="gap-x-1 text-lg" size="lg" variant="link">
+                  <Users />
+                  About us
+                </Button>
+                <Button className="gap-x-1 text-lg" size="lg" variant="link">
+                  <Mail />
+                  Contact us
+                </Button>
+              </div>
+            </SheetContent>
+          </Sheet>
+
+          <h1 className="relative -top-0.5 flex-grow text-3xl font-bold md:flex-grow-0">
+            Blog
+          </h1>
+
+          <NavigationMenu className="hidden md:flex">
+            <NavigationMenuList>
+              <NavigationMenuItem>
+                <Link href="/about-us" legacyBehavior passHref>
+                  <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                    Home
+                  </NavigationMenuLink>
+                </Link>
+              </NavigationMenuItem>
+              <NavigationMenuItem>
+                <NavigationMenuTrigger>Categories</NavigationMenuTrigger>
+                <NavigationMenuContent>
+                  <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
+                    {components.map((component) => (
+                      <ListItem
+                        key={component.title}
+                        title={component.title}
+                        href={component.href}
+                      >
+                        {component.description}
+                      </ListItem>
+                    ))}
+                  </ul>
+                </NavigationMenuContent>
+              </NavigationMenuItem>
+              <NavigationMenuItem>
+                <Link href="/contact-us" legacyBehavior passHref>
+                  <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                    Contact us
+                  </NavigationMenuLink>
+                </Link>
+              </NavigationMenuItem>
+              <NavigationMenuItem>
+                <Link href="/about-us" legacyBehavior passHref>
+                  <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                    About us
+                  </NavigationMenuLink>
+                </Link>
+              </NavigationMenuItem>
+            </NavigationMenuList>
+          </NavigationMenu>
+
+          <ModeToggle />
         </div>
-      </div>
+      </header>
+      <main className="mx-3 mt-2">
+        <form className="flex flex-row items-center gap-x-2 md:hidden">
+          <Input type="text" placeholder="Search here" />
+          <Button type="submit">Search</Button>
+        </form>
+        <section className="mt-3">
+          <h2 className="text-2xl font-bold md:hidden">Newest</h2>
+          <Carousel
+            opts={{
+              align: "start",
+            }}
+            className="mt-2 w-full"
+          >
+            <CarouselContent>
+              {Array.from({ length: 10 }).map((_, index) => (
+                <CarouselItem
+                  key={index}
+                  className="h-[16.5rem] basis-1/2 md:h-[23rem] md:basis-full lg:h-[26rem]"
+                >
+                  <Card
+                    variant="clickableCard"
+                    className="h-[98%] bg-[url('/images/image.jpg')] bg-cover bg-no-repeat"
+                  >
+                    <CardContent className="flex h-full flex-col justify-end gap-y-2 rounded-xl p-2.5 text-slate-50 shadow-cardShadow backdrop-brightness-[0.5] duration-150 hover:backdrop-brightness-[0.4]">
+                      <h3 className="font-bold">
+                        Lorem ipsum dolor sit amet consectetur adipisicing
+                      </h3>
+                      <div className="flex flex-row gap-x-2 text-muted-foreground">
+                        <Clock />
+                        <p>10 min</p>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+          </Carousel>
+        </section>
+        <section className="flex flex-row gap-x-1">
+          <Carousel
+            opts={{
+              align: "start",
+            }}
+            className="w-full md:w-[60%]"
+          >
+            <CarouselContent className="ml-0.5 gap-x-1">
+              <CarouselItem className="basis-1/4 p-0 md:basis-1/5">
+                <Button
+                  active={activeMenu === 0}
+                  onClick={() => setActiveMenu(0)}
+                  variant="ghost"
+                  className="w-full text-xl font-bold"
+                >
+                  Popular
+                </Button>
+              </CarouselItem>
+              <CarouselItem className="basis-1/4 p-0 md:basis-1/5">
+                <Button
+                  active={activeMenu === 1}
+                  onClick={() => setActiveMenu(1)}
+                  variant="ghost"
+                  className="w-full text-xl font-bold"
+                >
+                  Top
+                </Button>
+              </CarouselItem>
+              <CarouselItem className="basis-1/4 p-0 md:basis-1/5">
+                <Button
+                  active={activeMenu === 2}
+                  onClick={() => setActiveMenu(2)}
+                  variant="ghost"
+                  className="w-full text-xl font-bold"
+                >
+                  Trending
+                </Button>
+              </CarouselItem>
+              <CarouselItem className="min-w-fit basis-1/4 p-0 md:basis-1/5">
+                <Button
+                  active={activeMenu === 3}
+                  onClick={() => setActiveMenu(3)}
+                  variant="ghost"
+                  className="w-full text-xl font-bold"
+                >
+                  Editor&apos;s Choice
+                </Button>
+              </CarouselItem>
+            </CarouselContent>
+          </Carousel>
+          <form className="hidden w-[40%] flex-row gap-x-1 md:flex">
+            <Input placeholder="Search Here" className="w-full" />
+            <Button>Search</Button>
+          </form>
+        </section>
+        <section className="my-3 flex flex-col gap-y-2 md:hidden">
+          <Link draggable={false} href={"/posts/1"}>
+            <Card variant="clickableCard">
+              <CardContent className="flex flex-row gap-x-2 p-0">
+                <Image
+                  alt=""
+                  src={IMG}
+                  className="w size-32 rounded-l-xl object-cover"
+                  width={0}
+                  height={0}
+                />
+                <div className="flex flex-col justify-around">
+                  <h3 className="font-bold">
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Ex,
+                    suscipit.
+                  </h3>
 
-      <div className="relative z-[-1] flex place-items-center before:absolute before:h-[300px] before:w-full before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-full after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700 before:dark:opacity-10 after:dark:from-sky-900 after:dark:via-[#0141ff] after:dark:opacity-40 sm:before:w-[480px] sm:after:w-[240px] before:lg:h-[360px]">
-        <Image
-          className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
+                  <div className="flex flex-row items-center gap-x-2 text-muted-foreground">
+                    <Clock />
+                    <p>10 min</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </Link>
+        </section>
 
-      <div className="mb-32 grid text-center lg:mb-0 lg:w-full lg:max-w-5xl lg:grid-cols-4 lg:text-left">
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Docs{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-sm opacity-50">
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
+        <section className="my-3 hidden grid-cols-3 gap-3 md:grid lg:grid-cols-4">
+          <Link draggable={false} href={"/posts/1"}>
+            <Card variant="clickableCard">
+              <CardContent className="flex flex-col gap-y-2 p-0">
+                <Image
+                  alt=""
+                  src={IMG}
+                  className="w-full rounded-t-xl object-cover"
+                  width={0}
+                  height={0}
+                />
+                <div className="flex flex-col justify-around gap-y-1.5 p-2">
+                  <h3 className="font-bold">
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Ex,
+                    suscipit.
+                  </h3>
 
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Learn{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-sm opacity-50">
-            Learn about Next.js in an interactive course with&nbsp;quizzes!
-          </p>
-        </a>
+                  <div className="flex flex-row items-center gap-x-2 text-sm text-muted-foreground">
+                    <Clock className="h-5 w-5" />
+                    <p>10 min</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </Link>
+          <Link draggable={false} href={"/posts/1"}>
+            <Card variant="clickableCard">
+              <CardContent className="flex flex-col gap-y-2 p-0">
+                <Image
+                  alt=""
+                  src={IMG}
+                  className="w-full rounded-t-xl object-cover"
+                  width={0}
+                  height={0}
+                />
+                <div className="flex flex-col justify-around gap-y-1.5 p-2">
+                  <h3 className="font-bold">
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Ex,
+                    suscipit.
+                  </h3>
 
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Templates{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-sm opacity-50">
-            Explore starter templates for Next.js.
-          </p>
-        </a>
+                  <div className="flex flex-row items-center gap-x-2 text-sm text-muted-foreground">
+                    <Clock className="h-5 w-5" />
+                    <p>10 min</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </Link>
+          <Link draggable={false} href={"/posts/1"}>
+            <Card variant="clickableCard">
+              <CardContent className="flex flex-col gap-y-2 p-0">
+                <Image
+                  alt=""
+                  src={IMG}
+                  className="w-full rounded-t-xl object-cover"
+                  width={0}
+                  height={0}
+                />
+                <div className="flex flex-col justify-around gap-y-1.5 p-2">
+                  <h3 className="font-bold">
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Ex,
+                    suscipit.
+                  </h3>
 
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Deploy{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-balance text-sm opacity-50">
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
+                  <div className="flex flex-row items-center gap-x-2 text-sm text-muted-foreground">
+                    <Clock className="h-5 w-5" />
+                    <p>10 min</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </Link>
+          <Link draggable={false} href={"/posts/1"}>
+            <Card variant="clickableCard">
+              <CardContent className="flex flex-col gap-y-2 p-0">
+                <Image
+                  alt=""
+                  src={IMG}
+                  className="w-full rounded-t-xl object-cover"
+                  width={0}
+                  height={0}
+                />
+                <div className="flex flex-col justify-around gap-y-1.5 p-2">
+                  <h3 className="font-bold">
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Ex,
+                    suscipit.
+                  </h3>
+
+                  <div className="flex flex-row items-center gap-x-2 text-sm text-muted-foreground">
+                    <Clock className="h-5 w-5" />
+                    <p>10 min</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </Link>
+        </section>
+      </main>
+    </>
   );
 }
